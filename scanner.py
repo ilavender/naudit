@@ -12,10 +12,10 @@ parser.add_argument('-n', '--network', action='append', dest='networks', require
                     help='network or host to scan. i.e: 172.16.1.0/24')
 parser.add_argument('-e','--exclude', action='append', dest='exclude', required = False,
                     help='host to exclude from scan. i.e: 172.16.1.10')
-parser.add_argument('-d', '--dead-ping', action='store_true', dest='dead_ping',
-                    help='force scan of hosts which do not respond for ping.')
 parser.add_argument('-t','--timeout', action='store', dest='timeout', required = False,
                     help='port scan timeout, default: %s.' % SCAN_TIMEOUT)
+parser.add_argument('-d', '--dead-ping', action='store_true', dest='dead_ping',
+                    help='force scan of hosts which do not respond to ping.')
 args = parser.parse_args()
 
 output = {}
