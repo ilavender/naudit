@@ -6,6 +6,7 @@ import hashlib
 import argparse
 
 SCAN_TIMEOUT = 3
+SCAN_CONCURRENCY = 10000
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-n', '--network', action='append', dest='networks', required = True,
@@ -14,6 +15,8 @@ parser.add_argument('-e','--exclude', action='append', dest='exclude', required 
                     help='host to exclude from scan. i.e: 172.16.1.10')
 parser.add_argument('-t','--timeout', action='store', dest='timeout', required = False,
                     help='port scan timeout, default: %s.' % SCAN_TIMEOUT)
+parser.add_argument('-c','--concurrency', action='store', dest='concurrency', required = False,
+                    help='ports scan concurrency, default: %s.' % SCAN_CONCURRENCY)
 parser.add_argument('-d', '--dead-ping', action='store_true', dest='dead_ping',
                     help='force scan of hosts which do not respond to ping.')
 args = parser.parse_args()
@@ -127,7 +130,11 @@ def main():
         if 'up' in scan[host_ip]['status']['state'] or args.dead_ping:
             all_hosts.append(host_ip)
     
-    chunk_size = 10000
+    if args.concurrency > 0:
+        chunk_size = args.concurrency
+    else:
+        chunk_size = SCAN_CONCURRENCY
+        
     
     for host_ip in all_hosts:
         if host_ip not in exclude_hosts:
