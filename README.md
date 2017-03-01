@@ -1,7 +1,8 @@
 naudit
 ======
 
-Scan for new listening ports and alert on Sensu client socket
+Scan for new listening ports and alert on Sensu client socket.
+
 Designed to scan networks and hosts externally in order to check how the world see you and detect newly exposed ports.
 
 # Requirements
