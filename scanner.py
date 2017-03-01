@@ -134,7 +134,7 @@ def alert(IP, UDP_PORT, MESSAGE):
 def main():        
 
     if 'AWS' in args.networks:
-        args.networks.pop('AWS', None)
+        args.networks.remove('AWS')
         for instance in running_instances(MY_REGIONS):
             args.networks.append(instance['public_dns_name'])
 
