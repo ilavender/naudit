@@ -189,7 +189,7 @@ def main():
         for port in output[ip]:                
             if naudith_map == False or ip not in naudith_map or port not in naudith_map[ip]:
                 print('new listener %s: %s' % (ip, port))
-                MESSAGE = 'new listener %s: %s' % (ip, port )
+                MESSAGE = '%s: %s' % (ip, port )
                 changes.append(MESSAGE)
                     
     write_cache_data(map, output)
