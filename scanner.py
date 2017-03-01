@@ -4,6 +4,9 @@ import os, json
 import nmap, socket, threading
 import hashlib
 import argparse
+import boto3
+
+MY_REGIONS = ['us-east-1', 'eu-west-1']
 
 SCAN_TIMEOUT = 3
 SCAN_CONCURRENCY = 10000
@@ -22,6 +25,40 @@ parser.add_argument('-d', '--dead-ping', action='store_true', dest='dead_ping',
 args = parser.parse_args()
 
 output = {}
+
+
+
+def running_instances(MY_REGIONS):
+    
+               
+    MY_RUNNING = []                
+
+    
+    for I_REGION in MY_REGIONS:
+    
+        ec2 = boto3.resource('ec2', region_name=I_REGION)
+        instances = ec2.instances.filter(
+                                         Filters=[{'Name': 'instance-state-name', 'Values': ['running']}])
+    
+        for instance in instances:                                       
+                
+            if instance.public_dns_name:
+                I_ID = instance.id
+                I_NAME = None
+                for tag in instance.tags:
+                    if tag['Key'] == 'Name':
+                        I_NAME = tag['Value']           
+                MY_RUNNING.append({'InstancesName':I_NAME, 
+                                   'InstancesId':I_ID, 
+                                   'InstanceType':instance.instance_type, 
+                                   'AvailabilityZone':instance.placement['AvailabilityZone'], 
+                                   'public_dns_name': instance.public_dns_name
+                                   })
+            
+            
+    return MY_RUNNING
+
+
 
 def TCP_connect(ip, port_number, delay, output):
     TCPsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -96,7 +133,14 @@ def alert(IP, UDP_PORT, MESSAGE):
 
 def main():        
 
+    if 'AWS' in args.networks:
+        args.networks.pop('AWS', None)
+        for instance in running_instances(MY_REGIONS):
+            args.networks.append(instance['public_dns_name'])
+
+
     networks = ' '.join(args.networks) 
+    
     if args.exclude is not None:
             exclude_hosts = args.exclude
     else:
@@ -141,19 +185,11 @@ def main():
             print('scanning host: ' + host_ip)
             scan_ports(host_ip, delay, chunk_size) 
                            
-    for ip in output:        
+    for ip in output:
         for port in output[ip]:                
             if naudith_map == False or ip not in naudith_map or port not in naudith_map[ip]:
                 print('new listener %s: %s' % (ip, port))
-                MESSAGE = { "name": "naudit_network_change",
-                            "output": 'new listener %s: %s' % (ip, port ),
-                            "status": 1, 
-                            "handler": "isubscribe",
-                            "handle": True, 
-                            "enable_deprecated_filtering": False, 
-                            "occurrences": 1, 
-                            "refresh": 0
-                            }
+                MESSAGE = 'new listener %s: %s' % (ip, port )
                 changes.append(MESSAGE)
                     
     write_cache_data(map, output)
