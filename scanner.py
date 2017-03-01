@@ -133,6 +133,8 @@ def alert(IP, UDP_PORT, MESSAGE):
 
 def main():        
 
+    id_networks = ' '.join(args.networks)
+
     if 'AWS' in args.networks:
         if args.regions is not None:
             MY_REGIONS = args.regions
@@ -151,7 +153,7 @@ def main():
         exclude_hosts = []
         
     m = hashlib.sha256()
-    m.update(b"%s" % networks.encode('utf-8'))
+    m.update(b"%s" % id_networks.encode('utf-8'))
     m.update(b"%s" % ' '.join(exclude_hosts).encode('utf-8'))
     if args.dead_ping:
         m.update(b"%s" % '--dead-ping'.encode('utf-8'))
