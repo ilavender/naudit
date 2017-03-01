@@ -15,18 +15,19 @@ pip install -r req.txt
 - configure boto aws credentials:
     https://boto3.readthedocs.io/en/latest/guide/quickstart.html#configuration
 	http://boto3.readthedocs.io/en/latest/guide/configuration.html#shared-credentials-file
-- when using -n AWS it default to scan instances in 'us-east-1', 'eu-west-1', you can set your regions by changing MY_REGIONS.
+- when using -n AWS it defaults to scan instances in 'us-east-1' and 'eu-west-1' unless -r region is used.
   
 
 # Usage
 
-  	scanner.py [-h] -n NETWORKS [-e EXCLUDE] [-t TIMEOUT] [-c CONCURRENCY]
-                  [-d]
+  	scanner.py [-h] -n NETWORKS [-e EXCLUDE] [-t TIMEOUT] [-c CONCURRENCY] [-d]                  
 
-	optional arguments:
-  		-h, --help            show this help message and exit
+	arguments:
+
   		-n NETWORKS, --network NETWORKS
 						network or host to scan. i.e: 172.16.1.0/24
+		-r REGIONS, --region REGIONS
+                        specify AWS region when using -n AWS
   		-e EXCLUDE, --exclude EXCLUDE
                         host to exclude from scan. i.e: 172.16.1.10
   		-t TIMEOUT, --timeout TIMEOUT

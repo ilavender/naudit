@@ -6,8 +6,6 @@ import hashlib
 import argparse
 import boto3
 
-MY_REGIONS = ['us-east-1', 'eu-west-1']
-
 SCAN_TIMEOUT = 3
 SCAN_CONCURRENCY = 10000
 
@@ -16,6 +14,8 @@ parser.add_argument('-n', '--network', action='append', dest='networks', require
                     help='network or host to scan. i.e: 172.16.1.0/24')
 parser.add_argument('-e','--exclude', action='append', dest='exclude', required = False,
                     help='host to exclude from scan. i.e: 172.16.1.10')
+parser.add_argument('-r','--region', action='append', dest='regions', required = False,
+                    help='specify AWS region when using -n AWS')
 parser.add_argument('-t','--timeout', type=int, action='store', dest='timeout', required = False,
                     help='port scan timeout, default: %s.' % SCAN_TIMEOUT)
 parser.add_argument('-c','--concurrency', type=int, action='store', dest='concurrency', required = False,
@@ -134,6 +134,10 @@ def alert(IP, UDP_PORT, MESSAGE):
 def main():        
 
     if 'AWS' in args.networks:
+        if args.regions is not None:
+            MY_REGIONS = args.regions
+        else:
+            MY_REGIONS = ['us-east-1', 'eu-west-1']
         args.networks.remove('AWS')
         for instance in running_instances(MY_REGIONS):
             args.networks.append(instance['public_dns_name'])
