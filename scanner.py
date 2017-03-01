@@ -206,8 +206,8 @@ def main():
                     "handler": "isubscribe",
                     "handle": True, 
                     "enable_deprecated_filtering": False, 
-                    "occurrences": 1, 
-                    "refresh": 0
+                    "occurrences": 1,
+                    "refresh": 1
                     }
         alert('127.0.0.1', 3030, MESSAGE)
 
