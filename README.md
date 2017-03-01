@@ -1,6 +1,17 @@
-Scan for new listening ports
+naudit
+======
 
-  	usage: scanner.py [-h] -n NETWORKS [-e EXCLUDE] [-t TIMEOUT] [-c CONCURRENCY]
+Scan for new listening ports and alert on Sensu client socket
+Designed to scan networks and hosts externally in order to check how the world see you and detect newly exposed ports.
+
+# Requirements
+
+pip install -r req.txt
+
+
+# Usage
+
+  	scanner.py [-h] -n NETWORKS [-e EXCLUDE] [-t TIMEOUT] [-c CONCURRENCY]
                   [-d]
 
 	optional arguments:
