@@ -68,7 +68,7 @@ def write_cache_data(cachefile, data):
 
 def scan_ports(host_ip, delay, chunk_size):
 
-    for series in chunks(range(1, 20000), chunk_size):        
+    for series in chunks(range(1, 65535), chunk_size):        
 
         threads_list = {}
     
@@ -130,7 +130,7 @@ def main():
         if 'up' in scan[host_ip]['status']['state'] or args.dead_ping:
             all_hosts.append(host_ip)
     
-    if args.concurrency > 0:
+    if args.concurrency and args.concurrency > 0:
         chunk_size = args.concurrency
     else:
         chunk_size = SCAN_CONCURRENCY
@@ -161,7 +161,7 @@ def main():
     if len(changes) > 0:
         
         MESSAGE = { "name": "naudit_network_change",
-                    "output": 'scanner detected % changes' % len(changes),
+                    "output": 'scanner detected % changes\n%s' % (len(changes), json.dumps(changes)),
                     "status": 2, 
                     "handler": "isubscribe",
                     "handle": True, 
