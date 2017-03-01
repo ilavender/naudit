@@ -15,7 +15,7 @@ pip install -r req.txt
 - configure boto aws credentials:
     https://boto3.readthedocs.io/en/latest/guide/quickstart.html#configuration
 	http://boto3.readthedocs.io/en/latest/guide/configuration.html#shared-credentials-file
-- set your regions by changing MY_REGIONS
+- when using -n AWS it default to scan instances in 'us-east-1', 'eu-west-1', set can set your regions by changing MY_REGIONS.
   
 
 # Usage
