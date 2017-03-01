@@ -5,9 +5,12 @@ import nmap, socket, threading
 import hashlib
 import argparse
 import boto3
+import logging
 
 SCAN_TIMEOUT = 3
 SCAN_CONCURRENCY = 10000
+
+logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%d/%m/%Y %H:%M:%S', filename='/tmp/naudit.log', level=logging.DEBUG)
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-n', '--network', action='append', dest='networks', required = True,
@@ -132,7 +135,7 @@ def alert(IP, UDP_PORT, MESSAGE):
 
 
 def main():        
-
+   
     id_networks = ' '.join(args.networks)
 
     if 'AWS' in args.networks:
@@ -188,13 +191,13 @@ def main():
     
     for host_ip in all_hosts:
         if host_ip not in exclude_hosts:
-            print('scanning host: ' + host_ip)
+            logging.info('scanning host: ' + host_ip)
             scan_ports(host_ip, delay, chunk_size) 
                            
     for ip in output:
         for port in output[ip]:                
             if naudith_map == False or ip not in naudith_map or port not in naudith_map[ip]:
-                print('new listener %s: %s' % (ip, port))
+                logging.warning('new listener %s: %s' % (ip, port))
                 MESSAGE = '%s: %s' % (ip, port )
                 changes.append(MESSAGE)
                     
