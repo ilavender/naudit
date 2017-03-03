@@ -6,11 +6,12 @@ import hashlib
 import argparse
 import boto3
 import logging
+from datetime import datetime
 
 SCAN_TIMEOUT = 3
 SCAN_CONCURRENCY = 10000
 
-logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%d/%m/%Y %H:%M:%S', filename='/tmp/naudit.log', level=logging.DEBUG)
+logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%d/%m/%Y %H:%M:%S', filename='/tmp/naudit.log', level=logging.INFO)
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-n', '--network', action='append', dest='networks', required = True,
@@ -205,8 +206,8 @@ def main():
     
     if len(changes) > 0:
         
-        MESSAGE = { "name": "naudit_network_change",
-                    "output": 'scanner detected % changes\n%s' % (len(changes), json.dumps(changes)),
+        MESSAGE = { "name": "naudit_network_change-%s" % datetime.now().timestamp(),
+                    "output": 'scanner detected % new open ports\n%s' % (len(changes), json.dumps(changes)),
                     "status": 2, 
                     "handler": "isubscribe",
                     "handle": True, 
