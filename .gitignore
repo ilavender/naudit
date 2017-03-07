@@ -2,6 +2,7 @@
 *.pid
 *.pyc
 *.log
+*.json
 local_settings.py
 .buildpath
 .project

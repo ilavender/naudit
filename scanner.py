@@ -207,7 +207,7 @@ def main():
     if len(changes) > 0:
         
         MESSAGE = { "name": "naudit_network_change-%s" % datetime.now().timestamp(),
-                    "output": 'scanner detected % new open ports\n%s' % (len(changes), json.dumps(changes)),
+                    "output": 'scanner detected %s new open ports\n%s' % (len(changes), json.dumps(changes)),
                     "status": 2, 
                     "handler": "isubscribe",
                     "handle": True, 
